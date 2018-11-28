@@ -8,8 +8,8 @@ module.exports = {
     },
     error: (res, error) => {
         res.status(200).send({
-            code: 1,
-            data: data,
+            code: 0,
+            data: null,
             msg: error
         })
     }

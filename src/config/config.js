@@ -2,8 +2,13 @@
 
 module.exports = {
   port: process.env.PORT || 8081,
+  youdaoApi: {
+    url: "http://openapi.youdao.com/api?",
+    appKey: "4c097bf42fc5dae3",
+    key: "8zv3vkVkE0KhtsU5vdnyIpsJominHv85"
+  },
   db: {
-    path: 'mongodb://localhost/tankokun'
+    path: "mongodb://localhost/tankokun"
     // database: process.env.DB_NAME || 'tabtracker',
     // user: process.env.DB_USER || 'tabtracker',
     // password: process.env.DB_PASS || 'tabtracker',
@@ -14,6 +19,6 @@ module.exports = {
     // }
   },
   authentication: {
-    jwtSecret: process.env.JWT_SECRET || 'secret'
+    jwtSecret: process.env.JWT_SECRET || "secret"
   }
-}
+};

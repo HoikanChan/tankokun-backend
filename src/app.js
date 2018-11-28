@@ -9,7 +9,7 @@ const config = require('./config/config')
 mongoose.connect(config.db.path)
 
 const app = express()
-app.use(morgan('combine'))
+app.use(morgan('combined'))
 app.use(bodyParser.json())
 app.use(cors())
 

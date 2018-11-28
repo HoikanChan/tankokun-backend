@@ -1,5 +1,5 @@
 const AuthenticationController = require('./controllers/AuthenticationController')
-const SongsController = require('./controllers/SongsController')
+const WordsController = require('./controllers/WordsController')
 const BookmarksController = require('./controllers/BookmarksController')
 const LikeAndDislikeController = require('./controllers/LikeAndDislikeController')
 const HistoriesController = require('./controllers/HistoriesController')
@@ -14,17 +14,17 @@ module.exports = app => {
     AuthenticationController.login
   )
 
-  app.get('/songs',
-    SongsController.index
+  app.get('/words',
+    WordsController.index
   )
-  app.get('/songs/:songId',
-    SongsController.show
+  app.get('/words/:word',
+    WordsController.search
   )
-  app.post('/songs',
-    SongsController.post
+  app.post('/words',
+    WordsController.post
   )
-  app.put('/songs/:songId',
-    SongsController.put
+  app.put('/words/:wordId',
+    WordsController.put
   )
 
   app.get('/bookmarks',

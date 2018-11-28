@@ -5,7 +5,7 @@ module.exports = mongoose => {
   }
   const schema = new mongoose.Schema({
     userId: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
-    songId: {type: mongoose.Schema.Types.ObjectId, ref: 'Song'}
+    wordId: {type: mongoose.Schema.Types.ObjectId, ref: 'Word'}
   })
   Bookmark.model = mongoose.model(Bookmark.name, schema)
   return Bookmark

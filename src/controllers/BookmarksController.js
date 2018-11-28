@@ -1,25 +1,26 @@
 const {
   Bookmark
 } = require('../models')
+const sendResult = require("../utils/sendResult");
 
 module.exports = {
   async index (req, res) {
     try {
-      const {songId} = req.query
+      const {wordId} = req.query
       const userId = req.user._id
       let where = {
         'userId': userId
       }
-      if (songId) {
-        where.songId = songId
+      if (wordId) {
+        where.wordId = wordId
       }
       let bookmark = await Bookmark.find(where)
-      // .populate({path: 'songId', select: ['title', 'artist', 'album']})
+      // .populate({path: 'wordId', select: ['title', 'artist', 'album']})
       bookmark = bookmark.map(bookmark => bookmark.toJSON())
       .map(bookmark => {
         return bookmark._id
       })
-      res.send(bookmark)
+      sendResult.success(res,bookmark)
     } catch (err) {
       res.status(500).send({
         error: 'An error occured when trying to fectch bookmark.'
@@ -28,21 +29,21 @@ module.exports = {
   },
   async post (req, res) {
     try {
-      const {songId} = req.body
+      const {wordId} = req.body
       const userId = req.user._id
-      if (userId && songId) {
+      if (userId && wordId) {
         const sameExistBookmark = await Bookmark.findOne({
           'userId': userId,
-          'songId': songId
+          'wordId': wordId
         })
         let newBookmark = null
         if (!sameExistBookmark) {
           newBookmark = await Bookmark.create({
             userId: userId,
-            songId: songId
+            wordId: wordId
           })
         }
-        res.send(newBookmark)
+        sendResult.success(res,newBookmark)
       } else {
         res.send(null)
       }
@@ -57,7 +58,7 @@ module.exports = {
       const bookmarkId = req.params.bookmarkId
       const bookmarkToRemove = await Bookmark.findByIdAndRemove(bookmarkId)
       console.log(bookmarkToRemove)
-      res.send(bookmarkToRemove)
+      sendResult.success(res,bookmarkToRemove)
     } catch (err) {
       res.status(500).send({
         error: 'An error occured when trying to delete bookmark.'
