@@ -1,68 +1,69 @@
-const {
-  Bookmark
-} = require('../models')
+const { Bookmark } = require("../models");
 const sendResult = require("../utils/sendResult");
 
 module.exports = {
-  async index (req, res) {
+  async index(req, res) {
     try {
-      const {wordId} = req.query
-      const userId = req.user._id
+      const { wordId } = req.query;
+      const userId = req.user.id;
       let where = {
-        'userId': userId
-      }
+        userId: userId
+      };
       if (wordId) {
-        where.wordId = wordId
+        where.wordId = wordId;
       }
-      let bookmark = await Bookmark.find(where)
+      let bookmark = await Bookmark.find(where);
       // .populate({path: 'wordId', select: ['title', 'artist', 'album']})
-      bookmark = bookmark.map(bookmark => bookmark.toJSON())
-      .map(bookmark => {
-        return bookmark._id
-      })
-      sendResult.success(res,bookmark)
+      bookmark = bookmark
+        .map(bookmark => bookmark.toJSON())
+        .map(bookmark => {
+          return bookmark._id;
+        });
+      sendResult.success(res, bookmark);
     } catch (err) {
-      res.status(500).send({
-        error: 'An error occured when trying to fectch bookmark.'
-      })
+      sendResult.error(res, err);
     }
   },
-  async post (req, res) {
+  async post(req, res) {
     try {
-      const {wordId} = req.body
-      const userId = req.user._id
+      const { wordId } = req.body;
+      const userId = req.user.id;
       if (userId && wordId) {
         const sameExistBookmark = await Bookmark.findOne({
-          'userId': userId,
-          'wordId': wordId
-        })
-        let newBookmark = null
+          userId: userId,
+          wordId: wordId
+        });
+        let newBookmark = null;
         if (!sameExistBookmark) {
           newBookmark = await Bookmark.create({
             userId: userId,
             wordId: wordId
-          })
+          });
         }
-        sendResult.success(res,newBookmark)
+        sendResult.success(res, newBookmark);
       } else {
-        res.send(null)
+        res.send(null);
       }
     } catch (err) {
-      res.status(500).send({
-        error: 'An error occured when trying to create bookmark.'
-      })
+      sendResult.error(res, err);
     }
   },
-  async delete (req, res) {
+  async delete(req, res) {
     try {
-      const bookmarkId = req.params.bookmarkId
-      const bookmarkToRemove = await Bookmark.findByIdAndRemove(bookmarkId)
-      console.log(bookmarkToRemove)
-      sendResult.success(res,bookmarkToRemove)
+      const { wordId } = req.query;
+      const userId = req.user.id;
+      let where = {
+        userId: userId
+      };
+      if (wordId) {
+        where.wordId = wordId;
+      } else {
+        throw '缺少参数 wordId'
+      }
+      const bookmarkToRemove = await Bookmark.deleteOne(where);
+      sendResult.success(res, bookmarkToRemove);
     } catch (err) {
-      res.status(500).send({
-        error: 'An error occured when trying to delete bookmark.'
-      })
+      sendResult.error(res, err);
     }
   }
-}
+};

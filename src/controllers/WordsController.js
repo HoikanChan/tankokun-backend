@@ -1,4 +1,4 @@
-const { Words } = require("../models");
+const { Words, Bookmark } = require("../models");
 const sendResult = require("../utils/sendResult");
 const request = require("superagent");
 const config = require("../config/config");
@@ -38,6 +38,18 @@ module.exports = {
           wordDetail
         });
       }
+      //TODO: 联合查询
+      // result.fav = false;
+      // const userId = req.query.userId;
+      // if (userId) {
+      //   const bookmark = await Bookmark.findOne({
+      //     userId: userId,
+      //     wordId: result._id
+      //   });
+      //   if (bookmark) {
+      //     result.fav = true;
+      //   }
+      // }
       sendResult.success(res, result);
     } catch (err) {
       sendResult.error(res, err);
