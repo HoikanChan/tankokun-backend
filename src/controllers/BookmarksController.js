@@ -12,13 +12,19 @@ module.exports = {
       if (wordId) {
         where.wordId = wordId;
       }
-      let bookmark = await Bookmark.find(where);
-      // .populate({path: 'wordId', select: ['title', 'artist', 'album']})
-      bookmark = bookmark
-        .map(bookmark => bookmark.toJSON())
-        .map(bookmark => {
-          return bookmark._id;
-        });
+      let bookmark = await Bookmark.find(where).populate({
+        path: "wordId",
+        select: ["name", "wordDetail"]
+      });
+      bookmark = bookmark.map(bookmark => bookmark.toJSON());
+      bookmark = bookmark.map(bookmark => {
+        bookmark.wordDetail = bookmark.wordId.wordDetail;
+        bookmark.wordId = bookmark.wordId._id;
+        return bookmark;
+      });
+      // .map(bookmark => {
+      //   return bookmark._id;
+      // });
       sendResult.success(res, bookmark);
     } catch (err) {
       sendResult.error(res, err);
@@ -58,7 +64,7 @@ module.exports = {
       if (wordId) {
         where.wordId = wordId;
       } else {
-        throw '缺少参数 wordId'
+        throw "缺少参数 wordId";
       }
       const bookmarkToRemove = await Bookmark.deleteOne(where);
       sendResult.success(res, bookmarkToRemove);
